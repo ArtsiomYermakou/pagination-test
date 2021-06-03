@@ -1,7 +1,7 @@
 import {TablePagination} from "@material-ui/core";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchPassengersTC} from "./reducers/passenger-reducer";
+import {fetchPassengersTC, setPassengersAC} from "./reducers/passenger-reducer";
 import classes from './App.module.scss'
 import planeImg from "../src/assets/plane.jpg";
 
@@ -10,10 +10,22 @@ function App() {
     const [currentRows, setCurrentRows] = useState(10);
     const [currentPage, setCurrentPage] = useState(0)
 
-    const passengersData = useSelector(state => state.passengers.passengers)
+    const passengersData = useSelector(state => state.passengers?.passengers);
+    const savedData = useSelector(state => state.passengers?.savedData);
 
     useEffect(() => {
-        dispatch(fetchPassengersTC(currentPage, currentRows))
+        dispatch(fetchPassengersTC(currentPage, currentRows));
+    }, [])
+
+    useEffect(() => {
+
+        if (!Object.keys(savedData).map(item => +item).includes(currentPage)) {
+            dispatch(fetchPassengersTC(currentPage, currentRows));
+        }
+        else{
+            dispatch(setPassengersAC(savedData[currentPage]))
+        }
+
     }, [currentPage, currentRows, dispatch])
 
     const changePage = (event, newPage) => {
