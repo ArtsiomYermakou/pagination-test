@@ -12,17 +12,16 @@ function App() {
 
     const passengersData = useSelector(state => state.passengers?.passengers);
     const savedData = useSelector(state => state.passengers?.savedData);
+    const totalPages = useSelector(state => state.passengers.totalCountPages)
 
     useEffect(() => {
         dispatch(fetchPassengersTC(currentPage, currentRows));
     }, [])
 
     useEffect(() => {
-
         if (!Object.keys(savedData).map(item => +item).includes(currentPage)) {
             dispatch(fetchPassengersTC(currentPage, currentRows));
-        }
-        else{
+        } else {
             dispatch(setPassengersAC(savedData[currentPage]))
         }
 
@@ -66,7 +65,7 @@ function App() {
             <div className={classes.pagination}>
                 <TablePagination
                     component="div"
-                    count={passengersData?.totalPages ? passengersData?.totalPages : 10}
+                    count={totalPages}
                     page={currentPage}
                     onChangePage={changePage}
                     rowsPerPage={currentRows}

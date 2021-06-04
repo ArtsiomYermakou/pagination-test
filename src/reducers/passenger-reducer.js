@@ -3,7 +3,8 @@ import {passengersAPI} from "../api/api-passengers";
 
 const initialState = {
     passengers: {},
-    savedData: []
+    savedData: [],
+    totalCountPages: 0
 }
 
 export const passengersReducer = (state = initialState, action) => {
@@ -29,6 +30,11 @@ export const passengersReducer = (state = initialState, action) => {
                 }
             }
             return state
+        case "SET-TOTAL-PAGES":
+            return {
+                ...state,
+                totalCountPages: action.pageCount
+            }
         default:
             return state
     }
@@ -40,6 +46,9 @@ export const setPassengersAC = (passengers) => (
 export const setPageNumber = (numberPage, data) => (
     {type: "SET-PAGE-NUMBER", numberPage, data}
 )
+export const setTotalPages = (pageCount) => (
+    {type: "SET-TOTAL-PAGES", pageCount}
+)
 
 export const fetchPassengersTC = (page, countRows) => {
     return (dispatch) => {
@@ -47,6 +56,7 @@ export const fetchPassengersTC = (page, countRows) => {
             .then((res) => {
                 dispatch(setPassengersAC(res.data))
                 dispatch(setPageNumber(page, res.data.data))
+                dispatch(setTotalPages(res.data.totalPages))
             })
     }
 }
