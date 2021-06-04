@@ -19,11 +19,9 @@ export const passengersReducer = (state = initialState, action) => {
                 id: action.numberPage,
                 data: action.data
             }
-            if (
-                state.savedData.filter((item) => {
-                    return item.id === action.numberPage
-                }).length === 0
-            ) {
+            if (state.savedData
+                .filter((item) => item.id === action.numberPage)
+                .length === 0) {
                 return {
                     ...state,
                     savedData: [...state.savedData, newElementInArray]
@@ -54,9 +52,9 @@ export const fetchPassengersTC = (page, countRows) => {
     return (dispatch) => {
         passengersAPI.getPassengers(page, countRows)
             .then((res) => {
-                dispatch(setPassengersAC(res.data))
-                dispatch(setPageNumber(page, res.data.data))
-                dispatch(setTotalPages(res.data.totalPages))
+                dispatch(setPassengersAC(res.data));
+                dispatch(setPageNumber(page, res.data.data));
+                dispatch(setTotalPages(res.data.totalPages));
             })
     }
 }

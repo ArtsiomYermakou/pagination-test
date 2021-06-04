@@ -8,24 +8,23 @@ import planeImg from "../src/assets/plane.jpg";
 function App() {
     const dispatch = useDispatch();
     const [currentRows, setCurrentRows] = useState(10);
-    const [currentPage, setCurrentPage] = useState(0)
+    const [currentPage, setCurrentPage] = useState(0);
 
     const passengersData = useSelector(state => state.passengers?.passengers);
     const savedData = useSelector(state => state.passengers?.savedData);
-    const totalPages = useSelector(state => state.passengers.totalCountPages)
+    const totalPages = useSelector(state => state.passengers.totalCountPages);
 
-    useEffect(() => {
-        dispatch(fetchPassengersTC(currentPage, currentRows));
-    }, [])
+    const savedDataKeys = Object.keys(savedData);
+    const savedDataCurrentPage = savedData[currentPage];
 
-    useEffect(() => {
-        if (!Object.keys(savedData).map(item => +item).includes(currentPage)) {
+      useEffect(() => {
+        if (!savedDataKeys.map(item => +item).includes(currentPage)) {
             dispatch(fetchPassengersTC(currentPage, currentRows));
         } else {
-            dispatch(setPassengersAC(savedData[currentPage]))
+            dispatch(setPassengersAC(savedDataCurrentPage));
         }
 
-    }, [currentPage, currentRows, dispatch])
+    }, [currentPage, currentRows,savedDataKeys,savedDataCurrentPage, dispatch]);
 
     const changePage = (event, newPage) => {
         setCurrentPage(newPage);
@@ -40,24 +39,24 @@ function App() {
         <div>
             <div className={classes.contentSection}>
                 <div className={classes.passengerItemWrapper}>
-                    {passengersData?.data?.map(p => {
-                        return <div className={classes.passengerItem} key={p["_id"]}>
+                    {passengersData?.data?.map(passanger => {
+                        return <div className={classes.passengerItem} key={passanger["_id"]}>
                             {
-                                p.airline.logo ?
-                                    <img src={p.airline.logo} alt="logo"/>
+                                passanger.airline.logo ?
+                                    <img src={passanger.airline.logo} alt="logo"/>
                                     : <img src={planeImg} alt="planeImg"/>
                             }
                             {
-                                p.name && <div>Name: {p.name}</div>
+                                passanger.name && <div>Name: {passanger.name}</div>
                             }
                             {
-                                p.trips && <div>Trips: {p.trips}</div>
+                                passanger.trips && <div>Trips: {passanger.trips}</div>
                             }
                             {
-                                p.airline.name && <div>Airline name:{p.airline.name}</div>
+                                passanger.airline.name && <div>Airline name:{passanger.airline.name}</div>
                             }
-                            {p.airline.website && <div>Website {p.airline.website}</div>}
-                            {p.airline.established && <div>Established: {p.airline.established}</div>}
+                            {passanger.airline.website && <div>Website {passanger.airline.website}</div>}
+                            {passanger.airline.established && <div>Established: {passanger.airline.established}</div>}
                         </div>
                     })}
                 </div>
